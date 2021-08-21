@@ -16,7 +16,7 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return ProductCollection::collection(Product::all());
+        return ProductCollection::collection(Product::paginate(10));
     }
 
     /**
