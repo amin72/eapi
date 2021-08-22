@@ -81,7 +81,7 @@ class ProductsController extends Controller
         $product->stock = $request->stock;
         $product->discount = $request->discount;
         $product->save();
-        
+
         return new ProductResource($product);
     }
 
@@ -92,5 +92,8 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Product $product) {
+        if ($product->delete()) {
+            return response(null, 204);
+        }
     }
 }
