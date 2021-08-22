@@ -25,9 +25,16 @@ class ProductReviewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request, Product $product) {
+        $request->validate([
+            'customer' => 'required',
+            'star' => 'required|integer|between:0,5',
+            'review' => 'required',
+        ]);
+
+        $review = new Review($request->all());
+        $product->reviews()->save($review);
+        return $review;
     }
 
     /**
