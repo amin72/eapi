@@ -10,6 +10,10 @@ use App\Http\Resources\Product\ProductCollection;
 
 class ProductsController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:sanctum')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +30,23 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        $request->validate([
+            'name' => 'required|max:255|unique:products,name',
+            'description' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+            'discount' => 'required|max:2',
+        ]);
+
+        $product = new Product;
+        $product->name = $request->name;
+        $product->detail = $request->description;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+        $product->discount = $request->discount;
+        $product->save();
+
+        return new ProductResource($product);
     }
 
     /**
