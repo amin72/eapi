@@ -67,6 +67,22 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Product $product) {
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+            'discount' => 'required|max:2',
+        ]);
+
+        $product->name = $request->name;
+        $product->detail = $request->description;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+        $product->discount = $request->discount;
+        $product->save();
+        
+        return new ProductResource($product);
     }
 
     /**
