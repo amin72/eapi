@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
+use Auth;
 
 
 class ProductsController extends Controller
@@ -39,6 +40,7 @@ class ProductsController extends Controller
         ]);
 
         $product = new Product;
+        $product->user_id = Auth::id();
         $product->name = $request->name;
         $product->detail = $request->description;
         $product->price = $request->price;
@@ -67,6 +69,8 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Product $product) {
+        $product->isOwner();
+
         $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
@@ -92,6 +96,8 @@ class ProductsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Product $product) {
+        $product->isOwner();
+
         if ($product->delete()) {
             return response(null, 204);
         }
